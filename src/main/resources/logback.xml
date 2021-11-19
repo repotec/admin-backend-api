@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!--
+	<springProfile name="dev">
+		<property value="c:/admin/logs" name="LOG_PATH"></property>
+	</springProfile>
+	
+	<springProfile name="test">
+		<property value="" name="LOG_PATH"></property>
+	</springProfile>
+	
+	<springProfile name="prod">
+		<property value="" name="LOG_PATH"></property>
+	</springProfile>
+	-->	
+	<!-- Console appender configuration -->	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%blue([${PID}] [%d{dd-MM-yyyy HH:mm:ss.SSS}]) %magenta([%thread]) %highlight(%-5level) %logger{40}.%M: %blue(%msg%n)</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- file appender configuration
+	<appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/adm-log.log</file>
+		
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>${PID} - %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n</Pattern>
+		</encoder>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/archived/adm-log_%d{dd-MM-yyyy}_%i.log</fileNamePattern>
+			<maxFileSize>10MB</maxFileSize>
+			<maxHistory>1</maxHistory>
+			<totalSizeCap>100MB</totalSizeCap>
+			<cleanHistoryOnStart>true</cleanHistoryOnStart>
+		</rollingPolicy>
+	</appender>-->
+	  
+	 <!-- levels configuration -->
+	 <root level="info">
+		<appender-ref ref="STDOUT" />
+		 <!-- <appender-ref ref="LOG_FILE"/> -->
+	</root>
+	
+	<!--  
+	<logger name="mypackagename.myappname" level="DEBUG"/>
+    <logger name="org.hibernate.SQL" level="DEBUG" />
+    <logger name="org.hibernate.type" level="DEBUG" />
+    -->
+</configuration>

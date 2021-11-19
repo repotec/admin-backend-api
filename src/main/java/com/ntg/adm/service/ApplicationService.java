@@ -1,0 +1,74 @@
+package com.ntg.adm.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import com.ntg.adm.dto.mapper.ApplicationMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import com.ntg.adm.dao.ApplicationRepository;
+import com.ntg.adm.dto.ApplicationDTO;
+import com.ntg.adm.exception.RecordNotFoundException;
+import com.ntg.adm.model.AdmApplication;
+
+import static com.ntg.adm.dao.specification.ApplicationSpecification.*;
+
+@Service	
+public class ApplicationService {
+	
+	@Autowired
+	ApplicationRepository admApplicationRepository;
+
+	@Autowired
+	ApplicationMapper applicationMapper;
+
+	public Page<AdmApplication> findAll(Pageable pageable){
+		return admApplicationRepository.findAll(pageable);
+	}
+	
+	public Optional<AdmApplication> findById(long applicationId){
+		return admApplicationRepository.findById(applicationId);
+	}
+	
+	public ApplicationDTO createApplication(ApplicationDTO application, long applicationId){
+		AdmApplication admApplication = admApplicationRepository.save(applicationMapper.ApplicationDtoToAdmApplication(application));
+		application.setApplicationId(admApplication.getApplicationId());
+		return application;
+	}
+
+	public ApplicationDTO updateApplication(ApplicationDTO application, long applicationId) {
+		if (!admApplicationRepository.findById(applicationId).isPresent())
+			throw new RecordNotFoundException("application is not found");
+		
+		application.setApplicationId(applicationId);
+		AdmApplication admApplication = admApplicationRepository.save(applicationMapper.ApplicationDtoToAdmApplication(application));
+		application.setApplicationId(admApplication.getApplicationId());
+		return application;
+	}
+	
+	public void deleteApplication(long applicationId) {
+		Optional<AdmApplication> admApplication = admApplicationRepository.findById(applicationId);
+		if (!admApplication.isPresent())
+			throw new RecordNotFoundException("application is not found");
+		
+		admApplicationRepository.deleteById(applicationId);
+	}
+	
+	public List<AdmApplication> findByApplicationName(String applicationName, String image){
+		return admApplicationRepository.findByNameByJPQLQuery(applicationName, image);
+	}
+
+	public Page<AdmApplication> findByApplicationNamePageable(String applicationName, String image, Pageable pageable){
+		return admApplicationRepository.findByNameByJPQLQueryPageable(applicationName, image, pageable);
+	}
+
+	public Page<AdmApplication> findByApplicationCriteria(String appName, long appId, Pageable pageable){
+		Specification<AdmApplication> spec = Specification.where(nameLikeCrtr(appName)).and(idCrtr(appId));
+		return admApplicationRepository.findAll(spec, pageable);
+	}
+}
+	
