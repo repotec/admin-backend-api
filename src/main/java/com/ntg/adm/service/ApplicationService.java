@@ -1,9 +1,15 @@
 package com.ntg.adm.service;
 
+import static com.ntg.adm.dao.specification.ApplicationSpecification.idCrtr;
+import static com.ntg.adm.dao.specification.ApplicationSpecification.nameLikeCrtr;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import com.ntg.adm.dto.mapper.ApplicationMapper;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,12 +18,15 @@ import org.springframework.stereotype.Service;
 
 import com.ntg.adm.dao.ApplicationRepository;
 import com.ntg.adm.dto.ApplicationDTO;
+import com.ntg.adm.dto.mapper.ApplicationMapper;
 import com.ntg.adm.exception.RecordNotFoundException;
 import com.ntg.adm.model.AdmApplication;
 
-import static com.ntg.adm.dao.specification.ApplicationSpecification.*;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 
 @Service	
+@Transactional
 public class ApplicationService {
 	
 	@Autowired
@@ -28,6 +37,34 @@ public class ApplicationService {
 
 	public Page<AdmApplication> findAll(Pageable pageable){
 		return admApplicationRepository.findAll(pageable);
+	}
+	
+	public List<ApplicationDTO> findAll(String[] sort){
+		
+		List<Order> orders = new ArrayList<Order>();
+		
+		if(sort[0].contains(",")) {
+			for (String sortOrder : sort) {
+				String[] _sort = sortOrder.split(",");
+		        orders.add(new Order(Sort.Direction.valueOf(_sort[1].toUpperCase()), _sort[0]));
+		    }
+		}
+		
+		List<ApplicationDTO> applicationDtoList = admApplicationRepository.findAll(Sort.by(orders)).stream().map(applicationMapper::admApplicationToApplicationDto).collect(Collectors.toList());
+		
+		return applicationDtoList;
+	}
+	
+	public List<ApplicationDTO> findAll(){
+		 List<ApplicationDTO> applicationDTO = admApplicationRepository.findAll().stream().map(applicationMapper::admApplicationToApplicationDto).collect(Collectors.toList());
+		 
+		 return applicationDTO;
+	}
+	
+	public List<ApplicationDTO> findAllWithSorting(Sort sort){
+		 List<ApplicationDTO> applicationDTO = admApplicationRepository.findAll(sort).stream().map(applicationMapper::admApplicationToApplicationDto).collect(Collectors.toList());
+		 
+		 return applicationDTO;
 	}
 	
 	public Optional<AdmApplication> findById(long applicationId){

@@ -1,16 +1,13 @@
 package com.ntg.adm.security;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import com.ntg.adm.dto.principle.UserPrincipleDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.ntg.adm.model.AdmUser;
+import com.ntg.adm.dto.principle.UserPrincipleDTO;
 
 public class UserPrinciple implements UserDetails {
 	private static final long serialVersionUID = 1L;
@@ -25,6 +22,10 @@ public class UserPrinciple implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return admUser.getUserRolesPrinciple().stream().map(role -> new SimpleGrantedAuthority(role.getRolePrinciple().getRoleName())).collect(Collectors.toList());
 	}
+	
+	public Long getUserId() {
+        return admUser.getUserId();
+    }
 
 	@Override
 	public String getPassword() {

@@ -1,4 +1,4 @@
-package com.ntg.adm;
+package com.ntg.adm.configuration;
 
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;

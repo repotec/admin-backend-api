@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,23 +18,22 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.ntg.adm.validation.annotation.ApplicationNamesChecker;
-import com.ntg.adm.validation.annotation.Prefix;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name="ADM_APPLICATIONS")
@@ -43,6 +43,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Setter
 @Getter
 @NoArgsConstructor
+@EntityListeners(value = { AuditingEntityListener.class })
 public class AdmApplication implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -53,9 +54,6 @@ public class AdmApplication implements Serializable {
 	@ApiModelProperty(notes = "The database generated aplication ID")
 	private long applicationId;
 
-	//@Prefix(value = "app", message = "Please enter a valid prefix {value}")
-	@NotNull(message = "application name cannot be empty")
-	@Size(max=50, min=5, message = "application name length must be great then {min} and less than {max}")
 	@Column(name="APPLICATION_NAME")
 	private String applicationName;
 
@@ -68,24 +66,28 @@ public class AdmApplication implements Serializable {
 	@Column(name="IS_ACTIVE")
 	private String isActive;
 
+	@CreatedBy
 	@Column(name="CREATED_BY")
-	private BigDecimal createdBy;
+	private Long createdBy;
 
+	@CreatedDate
 	@Temporal(TemporalType.DATE)
-	@Column(name="CREATION_DATE")
-	@Past(message = "create date must be in the past only.")
+	@Column(name="CREATED_DATE")
 	@JsonFormat(pattern = "dd-MM-yyyy")
-	private Date creationDate;
+	private Date createdDate;
 
+	@LastModifiedBy
+	@Column(name="LAST_MODIFIED_BY")
+	private Long lastModifiedBy;
+	
+	@LastModifiedDate
 	@Temporal(TemporalType.DATE)
-	@Column(name="LAST_UPDATE_DATE")
+	@Column(name="LAST_MODIFIED_DATE")
 	private Date lastUpdateDate;
 
-	@Column(name="LAST_UPDATED_BY")
-	private BigDecimal lastUpdatedBy;
 
 	@OneToMany(mappedBy="admApplication", cascade = CascadeType.PERSIST)
 	@JsonManagedReference
 	@BatchSize(size = 2)
-	private List<AdmApplicationsTl> admApplicationsTl;
+	private List<AdmApplicationText> admApplicationText;
 }

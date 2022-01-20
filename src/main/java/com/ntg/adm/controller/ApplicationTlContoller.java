@@ -10,23 +10,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ntg.adm.model.AdmApplicationsTl;
+import com.ntg.adm.model.AdmApplicationText;
 import com.ntg.adm.service.ApplicationTlService;
 
 @RestController
-@RequestMapping("/applications")
+@RequestMapping("/applica")
 public class ApplicationTlContoller {
 
 	@Autowired
 	ApplicationTlService applicationTlService;
 	
 	@RequestMapping(value= "/transaction/id", method = RequestMethod.GET)
-	public List<AdmApplicationsTl> findByApplicationId(@RequestParam BigDecimal applicationId){
+	public List<AdmApplicationText> findByApplicationId(@RequestParam BigDecimal applicationId){
 		return applicationTlService.findByApplicationId(applicationId);
 	}
 
 	@RequestMapping(value= "/transaction/id/{langCode}", method = RequestMethod.GET)
-	public List<AdmApplicationsTl> findByApplicationIdAndLanguageCode(@RequestParam BigDecimal applicationId, @PathVariable String langCode){
+	public List<AdmApplicationText> findByApplicationIdAndLanguageCode(@RequestParam BigDecimal applicationId, @PathVariable String langCode){
 		return applicationTlService.findByApplicationIdAndLanguageCode(applicationId, langCode);
 	}
 

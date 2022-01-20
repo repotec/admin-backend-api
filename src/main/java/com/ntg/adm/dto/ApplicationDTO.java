@@ -1,16 +1,28 @@
 package com.ntg.adm.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
-import com.ntg.adm.model.AdmApplication;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApplicationDTO implements Serializable {
 	private static final long serialVersionUID = -333085798418750181L;
 	
 	private long applicationId;
 	
+	@NotNull(message = "application name cannot be empty")
+	@Size(max=50, min=5, message = "Application Name length must be great then {min} and less than {max} '${validatedValue}'")
 	private String applicationName;
 	
 	private String applicationUrl;
@@ -20,66 +32,5 @@ public class ApplicationDTO implements Serializable {
 	
 	private String isActive;
 	
-	/**
-	 *  convert JPA entity to dto
-	 * @param application
-	 */
-	public ApplicationDTO(AdmApplication application) {
-		this(application.getApplicationId(), 
-			 application.getApplicationName(),
-			 application.getApplicationUrl(), 
-			 application.getImage(), 
-			 application.getIsActive());
-	}
-	
-	public ApplicationDTO() {
-	}
-	
-	public ApplicationDTO(long applicationId, String applicationName, String applicationUrl, String image, String isActive) {
-		this.applicationId = applicationId;
-		this.applicationName = applicationName;
-		this.applicationUrl = applicationUrl;
-		this.image = image;
-		this.isActive = isActive;
-	}
-
-	public long getApplicationId() {
-		return this.applicationId;
-	}
-
-	public void setApplicationId(long applicationId) {
-		this.applicationId = applicationId;
-	}
-
-	public String getApplicationName() {
-		return this.applicationName;
-	}
-
-	public void setApplicationName(String applicationName) {
-		this.applicationName = applicationName;
-	}
-
-	public String getApplicationUrl() {
-		return this.applicationUrl;
-	}
-
-	public void setApplicationUrl(String applicationUrl) {
-		this.applicationUrl = applicationUrl;
-	}
-
-	public String getImage() {
-		return this.image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
-
-	public String getIsActive() {
-		return this.isActive;
-	}
-
-	public void setIsActive(String isActive) {
-		this.isActive = isActive;
-	}
+	private List<ApplicationTextDTO> applicationText;
 }

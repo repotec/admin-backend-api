@@ -24,6 +24,8 @@ public class AdmUser implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(generator = "user-seq", strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "user-seq", sequenceName = "USER_SEQ", allocationSize = 1)
 	@Column(name="USER_ID")
 	private long userId;
 

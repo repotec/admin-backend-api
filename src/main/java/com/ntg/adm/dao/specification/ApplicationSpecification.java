@@ -1,7 +1,7 @@
 package com.ntg.adm.dao.specification;
 
 import com.ntg.adm.model.AdmApplication;
-import com.sun.javafx.binding.StringFormatter;
+//import com.sun.javafx.binding.StringFormatter;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.text.MessageFormat;

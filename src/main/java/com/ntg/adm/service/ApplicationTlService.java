@@ -6,24 +6,24 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ntg.adm.dao.ApplicationTlRepository;
-import com.ntg.adm.model.AdmApplicationsTl;
+import com.ntg.adm.dao.ApplicationTextRepository;
+import com.ntg.adm.model.AdmApplicationText;
 
 @Service	
 public class ApplicationTlService {
 	
 	@Autowired
-	ApplicationTlRepository admApplicationTlRepository;
+	ApplicationTextRepository admApplicationTlRepository;
 	
-	public Iterable<AdmApplicationsTl> findAll(){
+	public Iterable<AdmApplicationText> findAll(){
 		return admApplicationTlRepository.findAll();
 	}
 	
-	public List<AdmApplicationsTl> findByApplicationId(BigDecimal applicationId){
+	public List<AdmApplicationText> findByApplicationId(BigDecimal applicationId){
 		return admApplicationTlRepository.findByApplicationId(applicationId);
 	}
 	
-	public List<AdmApplicationsTl> findByApplicationIdAndLanguageCode(BigDecimal applicationId, String languageCode){
+	public List<AdmApplicationText> findByApplicationIdAndLanguageCode(BigDecimal applicationId, String languageCode){
 		return admApplicationTlRepository.findByApplicationIdAndLanguageCode(applicationId, languageCode);
 	}
 }
