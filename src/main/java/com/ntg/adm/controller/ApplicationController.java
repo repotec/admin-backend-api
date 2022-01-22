@@ -102,7 +102,7 @@ public class ApplicationController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SuccessResponse<String>> deleteApplication(@PathVariable(name = "id") long applicationId) {
-		applicationService.deleteApplication(applicationId);
+		applicationService.deleteEntityById(applicationId);
 		return new ResponseEntity<>(new SuccessResponse<>("application has been deleted"), HttpStatus.OK);
 	}
 }

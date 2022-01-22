@@ -13,21 +13,21 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.ntg.adm.base.AdminBaseService;
 import com.ntg.adm.dao.ApplicationRepository;
 import com.ntg.adm.dto.ApplicationDTO;
 import com.ntg.adm.dto.mapper.ApplicationMapper;
 import com.ntg.adm.exception.RecordNotFoundException;
 import com.ntg.adm.model.AdmApplication;
 
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
-
 @Service	
 @Transactional
-public class ApplicationService {
+public class ApplicationService extends AdminBaseService<AdmApplication, Long> {
 	
 	@Autowired
 	ApplicationRepository admApplicationRepository;
@@ -85,14 +85,6 @@ public class ApplicationService {
 		AdmApplication admApplication = admApplicationRepository.save(applicationMapper.ApplicationDtoToAdmApplication(application));
 		application.setApplicationId(admApplication.getApplicationId());
 		return application;
-	}
-	
-	public void deleteApplication(long applicationId) {
-		Optional<AdmApplication> admApplication = admApplicationRepository.findById(applicationId);
-		if (!admApplication.isPresent())
-			throw new RecordNotFoundException("application is not found");
-		
-		admApplicationRepository.deleteById(applicationId);
 	}
 	
 	public List<AdmApplication> findByApplicationName(String applicationName, String image){
