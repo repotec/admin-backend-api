@@ -15,6 +15,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.ntg.adm.base.BaseEntity;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,7 +32,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class AdmApplicationText implements Serializable {
+public class AdmApplicationText extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id

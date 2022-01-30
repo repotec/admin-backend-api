@@ -6,16 +6,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ntg.adm.base.BaseService;
 import com.ntg.adm.dao.ApplicationTextRepository;
+import com.ntg.adm.model.AdmApplication;
 import com.ntg.adm.model.AdmApplicationText;
 
 @Service	
-public class ApplicationTlService {
+public class ApplicationTlService extends BaseService<AdmApplicationText, Long> {
 	
 	@Autowired
 	ApplicationTextRepository admApplicationTlRepository;
 	
-	public Iterable<AdmApplicationText> findAll(){
+	public List<AdmApplicationText> findAll(){
 		return admApplicationTlRepository.findAll();
 	}
 	

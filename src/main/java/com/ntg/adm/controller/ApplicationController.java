@@ -1,6 +1,5 @@
 package com.ntg.adm.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +27,11 @@ import com.ntg.adm.dto.mapper.ApplicationMapper;
 import com.ntg.adm.exception.RecordNotFoundException;
 import com.ntg.adm.response.SuccessResponse;
 import com.ntg.adm.service.ApplicationService;
+import com.ntg.adm.util.query.SearchQuery;
 
 @RestController
 @RequestMapping("/applications")
+@Validated
 public class ApplicationController {
 
 	@Autowired
@@ -53,9 +54,15 @@ public class ApplicationController {
 	}
 	
 
-	@RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/sort", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SuccessResponse<List<ApplicationDTO>>> findAllApplicationsSorted(@RequestParam(defaultValue = "applicationId,a") String[] sort) {
 		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findAll(sort)), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/criteria", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<SuccessResponse<Page<ApplicationDTO>>> findAllApplicationsCriteria(@RequestBody SearchQuery searchQuery) {
+		Page<ApplicationDTO> result = applicationService.findApplicationsByCriteria(searchQuery);
+		return new ResponseEntity<>(new SuccessResponse<>(result), HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -99,7 +106,7 @@ public class ApplicationController {
 	public ResponseEntity<SuccessResponse<ApplicationDTO>> updateApplication(@PathVariable(name = "id") long applicationId, @Valid @RequestBody ApplicationDTO application) {
 		return new ResponseEntity<>(new SuccessResponse<>( applicationService.updateApplication(application, applicationId)), HttpStatus.OK);
 	}
-
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SuccessResponse<String>> deleteApplication(@PathVariable(name = "id") long applicationId) {
 		applicationService.deleteEntityById(applicationId);

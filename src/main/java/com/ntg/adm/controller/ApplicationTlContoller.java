@@ -14,18 +14,23 @@ import com.ntg.adm.model.AdmApplicationText;
 import com.ntg.adm.service.ApplicationTlService;
 
 @RestController
-@RequestMapping("/applica")
+@RequestMapping("/application")
 public class ApplicationTlContoller {
 
 	@Autowired
 	ApplicationTlService applicationTlService;
 	
-	@RequestMapping(value= "/transaction/id", method = RequestMethod.GET)
+	@RequestMapping(value= "/text", method = RequestMethod.GET)
+	public Iterable<AdmApplicationText> findAll(){
+		return applicationTlService.findAll();
+	}
+	
+	@RequestMapping(value= "/text/id", method = RequestMethod.GET)
 	public List<AdmApplicationText> findByApplicationId(@RequestParam BigDecimal applicationId){
 		return applicationTlService.findByApplicationId(applicationId);
 	}
 
-	@RequestMapping(value= "/transaction/id/{langCode}", method = RequestMethod.GET)
+	@RequestMapping(value= "/text/id/{langCode}", method = RequestMethod.GET)
 	public List<AdmApplicationText> findByApplicationIdAndLanguageCode(@RequestParam BigDecimal applicationId, @PathVariable String langCode){
 		return applicationTlService.findByApplicationIdAndLanguageCode(applicationId, langCode);
 	}

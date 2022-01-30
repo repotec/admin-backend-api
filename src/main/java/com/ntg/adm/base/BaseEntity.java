@@ -18,16 +18,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
 import lombok.Setter;
 
-@MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
-@Where(clause = "IS_DELETED = '0'")
 @Setter
 @Getter
-@NoArgsConstructor
-public abstract class AdminBaseEntity {
+@Where(clause = "IS_DELETED = '0'")
+@MappedSuperclass
+public abstract class BaseEntity {
 
 	@CreatedBy
 	@Column(name="CREATED_BY")
@@ -49,5 +48,5 @@ public abstract class AdminBaseEntity {
 	private Date lastUpdateDate;
 	
 	@Column(name = "IS_DELETED")
-	private char isDeleted;
+	private char isDeleted = '0';
 }

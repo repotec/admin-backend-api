@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.ntg.adm.base.AdminBaseRepository;
+import com.ntg.adm.base.BaseRepository;
 import com.ntg.adm.model.AdmApplication;
 
 /**
@@ -21,7 +21,7 @@ import com.ntg.adm.model.AdmApplication;
  * 3- NamedQuery and NamedNativeQuery
  * 4- Specifications
  */
-public interface ApplicationRepository extends AdminBaseRepository<AdmApplication, Long>, JpaSpecificationExecutor<AdmApplication> {
+public interface ApplicationRepository extends BaseRepository<AdmApplication, Long>, JpaSpecificationExecutor<AdmApplication> {
 	Page<AdmApplication> findAll(Pageable pageable);
 	List<AdmApplication> findByApplicationNameIgnoreCaseContaining(String applicationName);
 	List<AdmApplication> findAll();
@@ -38,4 +38,6 @@ public interface ApplicationRepository extends AdminBaseRepository<AdmApplicatio
 	Page<AdmApplication> findByNameByJPQLQueryPageable(@Param("name") String applicationName, @Param("img") String image, Pageable pageable);
 
 	Page<AdmApplication> findAll(Specification<AdmApplication> applicationCriteria, Pageable pageable);
+	
+	boolean existsByApplicationName(String value);
 }
