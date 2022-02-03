@@ -11,6 +11,6 @@ public class AdminConfig {
 
 	@Bean
 	public AuditorAware<Long> auditorAware(){
-		return new AdminAuditorAwareImpl();
+		return new AuditorAwareConfig();
 	}
 }

@@ -26,6 +26,7 @@ import com.ntg.adm.dto.ApplicationDTO;
 import com.ntg.adm.dto.mapper.ApplicationMapper;
 import com.ntg.adm.exception.RecordNotFoundException;
 import com.ntg.adm.model.AdmApplication;
+import com.ntg.adm.util.bundle.ResourceBundleUtil;
 import com.ntg.adm.util.query.SearchQuery;
 import com.ntg.adm.util.query.SpecificationUtil;
 
@@ -38,7 +39,7 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 
 	@Autowired
 	ApplicationMapper applicationMapper;
-
+	
 	public Page<AdmApplication> findAll(Pageable pageable){
 		return admApplicationRepository.findAll(pageable);
 	}
@@ -87,6 +88,9 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 		return application;
 	}
 
+
+	
+	
 	/**
 	 * 
 	 * @param application
@@ -94,8 +98,9 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	 * @return
 	 */
 	public ApplicationDTO updateApplication(ApplicationDTO application, long applicationId) {
-		if (!admApplicationRepository.findById(applicationId).isPresent())
-			throw new RecordNotFoundException("application is not found");
+		if (!admApplicationRepository.findById(applicationId).isPresent()) {
+			throw new RecordNotFoundException(ResourceBundleUtil.getMessage("email.validation.error"));
+		}
 		
 		application.setApplicationId(applicationId);
 		AdmApplication admApplication = admApplicationRepository.save(applicationMapper.ApplicationDtoToAdmApplication(application));
@@ -128,6 +133,9 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 		return admApplicationRepository.findAll(specification, pageRequest).map(applicationMapper::admApplicationToApplicationDto);
 	}
 	
+	/**
+	 * 
+	 */
 	@Override
     public boolean fieldValueExists(Object value) throws UnsupportedOperationException {
 

@@ -1,4 +1,4 @@
-package com.ntg.adm.security;
+package com.ntg.adm.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @EnableWebSecurity
-public class AdmSecurityConfingurer extends WebSecurityConfigurerAdapter {
+public class AdmSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	@Qualifier(value = "userDetailsServiceImpl")
 	UserDetailsService userDetailsService;
@@ -27,7 +27,9 @@ public class AdmSecurityConfingurer extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().anyRequest().authenticated().and().httpBasic();
-		
+		http.authorizeRequests().antMatchers("/actuator**").permitAll()
+			.anyRequest().authenticated()
+			.and().csrf().disable()
+			.httpBasic();
 	}
 }

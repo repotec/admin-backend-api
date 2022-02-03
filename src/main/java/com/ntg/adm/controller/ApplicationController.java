@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,6 +43,10 @@ public class ApplicationController {
 	@Autowired
 	ApplicationMapper applicationMapper;
 
+	@Autowired
+	@Qualifier("messages")
+	ResourceBundleMessageSource messageSource;
+	
 	@RequestMapping(value = "/pages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<ApplicationDTO>> findAllApplicationsPages(@PageableDefault(page = 0, size = 2)
 																	@SortDefault.SortDefaults({
@@ -62,6 +69,9 @@ public class ApplicationController {
 	@RequestMapping(value = "/criteria", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SuccessResponse<Page<ApplicationDTO>>> findAllApplicationsCriteria(@RequestBody SearchQuery searchQuery) {
 		Page<ApplicationDTO> result = applicationService.findApplicationsByCriteria(searchQuery);
+		
+		System.out.println(messageSource.getMessage("email.validation.error", null, LocaleContextHolder.getLocale()));
+		
 		return new ResponseEntity<>(new SuccessResponse<>(result), HttpStatus.OK);
 	}
 	

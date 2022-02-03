@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.ntg.adm.dao.UserRepository;
 import com.ntg.adm.security.UserPrinciple;
 
-public class AdminAuditorAwareImpl implements AuditorAware<Long> {
+public class AuditorAwareConfig implements AuditorAware<Long> {
 	
 	@Autowired
 	UserRepository userRepository;

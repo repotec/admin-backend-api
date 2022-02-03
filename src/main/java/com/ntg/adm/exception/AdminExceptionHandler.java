@@ -2,23 +2,23 @@ package com.ntg.adm.exception;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.ntg.adm.response.ErrorResponse;
 
 @ControllerAdvice
-public class AdminExceptionHandler {
+public class AdminExceptionHandler extends ResponseEntityExceptionHandler {
 	//@Autowired
 	//private JdbcTemplate jdbcTemplate;
 	
@@ -56,28 +56,28 @@ public class AdminExceptionHandler {
 	}
 	
 	
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public final ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
-		
-		String defaultMessage = null;
-		final Optional<ObjectError> firstError = ex.getBindingResult().getAllErrors().stream().findFirst();
-		if (firstError.isPresent()) {
-			defaultMessage = firstError.get().getDefaultMessage();
-		}
-		
-		List<String> errors = new ArrayList<String>();
-		errors.add(defaultMessage);
-		 
-		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), 
-														"0002",
-														"Method Argument Not Valid Exception", 
-														request.getDescription(false),
-														errors);
-		
-		//jdbcTemplate.update("call LOG_EXCEPTIONS(?,?,?)", adminErrorResponse.getErrorCode(), defaultMessage, request.getDescription(false));
-		
-		return new ResponseEntity<Object>(errorResponse, HttpStatus.BAD_REQUEST); 
-	}
+	//@ExceptionHandler(MethodArgumentNotValidException.class)
+	//public final ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
+	//	
+	//	String defaultMessage = null;
+	//	final Optional<ObjectError> firstError = ex.getBindingResult().getAllErrors().stream().findFirst();
+	//	if (firstError.isPresent()) {
+	//		defaultMessage = firstError.get().getDefaultMessage();
+	//	}
+	//	
+	//	List<String> errors = new ArrayList<String>();
+	//	errors.add(defaultMessage);
+	//	 
+	//	ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), 
+	//													"0002",
+	//													"Method Argument Not Valid Exception", 
+	//													request.getDescription(false),
+	//													errors);
+	//	
+	//	//jdbcTemplate.update("call LOG_EXCEPTIONS(?,?,?)", adminErrorResponse.getErrorCode(), defaultMessage, request.getDescription(false));
+	//	
+	//	return new ResponseEntity<Object>(errorResponse, HttpStatus.BAD_REQUEST); 
+	//}
 	
 	
 	@ExceptionHandler(Exception.class)
@@ -97,4 +97,29 @@ public class AdminExceptionHandler {
 		
 		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR); 
 	}
+
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		List<String> errors = new ArrayList<String>();
+		List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+		List<ObjectError> globalErrors = ex.getBindingResult().getGlobalErrors();
+		
+		
+		for(FieldError fieldError : fieldErrors) 
+			errors.add(fieldError.getDefaultMessage());
+		
+		for(ObjectError globalError : globalErrors) 
+			errors.add(globalError.getDefaultMessage());
+		
+		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+														"9999",
+														"Internal Server Error",
+														request.getDescription(false),
+														errors);
+		
+		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR); 
+	}
+	
+	
 }
