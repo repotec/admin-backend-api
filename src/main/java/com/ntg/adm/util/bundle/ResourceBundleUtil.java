@@ -17,9 +17,10 @@ public class ResourceBundleUtil {
 	}
 	
 	public static String getMessage(String key) {
-		Locale locale = LocaleContextHolder.getLocale();
-		messageSource.getMessage(key, null, locale);
-		
-		return null;
+		return messageSource.getMessage(key, null, LocaleContextHolder.getLocale());
+	}
+	
+	public static String getMessage(String key, Object...parameters) {
+		return messageSource.getMessage(key, parameters, LocaleContextHolder.getLocale());
 	}
 }

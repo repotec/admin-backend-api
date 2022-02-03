@@ -89,8 +89,6 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	}
 
 
-	
-	
 	/**
 	 * 
 	 * @param application
@@ -99,7 +97,9 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	 */
 	public ApplicationDTO updateApplication(ApplicationDTO application, long applicationId) {
 		if (!admApplicationRepository.findById(applicationId).isPresent()) {
-			throw new RecordNotFoundException(ResourceBundleUtil.getMessage("email.validation.error"));
+			String error = ResourceBundleUtil.getMessage("resource.notFound.error");
+			System.out.println("error:" + error);
+			throw new RecordNotFoundException(error);
 		}
 		
 		application.setApplicationId(applicationId);
