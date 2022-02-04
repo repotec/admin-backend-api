@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<!--
+	<!--profiles-->	
 	<springProfile name="dev">
 		<property value="c:/admin/logs" name="LOG_PATH"></property>
 	</springProfile>
@@ -12,7 +12,8 @@
 	<springProfile name="prod">
 		<property value="" name="LOG_PATH"></property>
 	</springProfile>
-	-->	
+	<!--profiles-->	
+	
 	<!-- Console appender configuration -->	
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
@@ -20,7 +21,7 @@
 		</encoder>
 	</appender>
 	
-	<!-- file appender configuration
+	<!-- file appender configuration -->
 	<appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOG_PATH}/adm-log.log</file>
 		
@@ -35,13 +36,28 @@
 			<totalSizeCap>100MB</totalSizeCap>
 			<cleanHistoryOnStart>true</cleanHistoryOnStart>
 		</rollingPolicy>
-	</appender>-->
+	</appender>
 	  
 	 <!-- levels configuration -->
+	 <springProfile name="dev">
 	 <root level="info">
 		<appender-ref ref="STDOUT" />
-		 <!-- <appender-ref ref="LOG_FILE"/> -->
 	</root>
+	</springProfile>
+	
+	<springProfile name="test">
+    	<root level="INFO">
+      	 	<appender-ref ref="LOG_FILE"/>
+    	</root>
+  	</springProfile>
+  	
+	<springProfile name="prod">
+    	<root level="INFO">
+      	 	<appender-ref ref="LOG_FILE"/>
+    	</root>
+  	</springProfile>
+  
+  	<!-- others -->
 	<!--  
 	<logger name="org.springframework.transaction" level="debug"/>
 	<logger name="org.springframework.orm.jpa" level="debug"/>
