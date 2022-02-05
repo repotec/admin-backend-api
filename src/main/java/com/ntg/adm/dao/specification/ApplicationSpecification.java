@@ -1,10 +1,11 @@
 package com.ntg.adm.dao.specification;
 
-import com.ntg.adm.model.AdmApplication;
+import java.text.MessageFormat;
+
 //import com.sun.javafx.binding.StringFormatter;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.text.MessageFormat;
+import com.ntg.adm.model.AdmApplication;
 
 public class ApplicationSpecification {
     public static Specification<AdmApplication> nameCrtr(String applicationName){

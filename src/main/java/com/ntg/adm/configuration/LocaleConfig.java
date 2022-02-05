@@ -12,10 +12,10 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 @Configuration
 public class LocaleConfig {
-	@Value("${app.baseName}")
+	@Value("${bundle.baseName}")
 	private String baseName;
 	
-	@Value("${app.defaultLocale}")
+	@Value("${bundle.defaultLocale}")
 	private String defaultLocale;
 	
 	@Bean(name = "messages")

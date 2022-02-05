@@ -87,9 +87,6 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 		application.setApplicationId(admApplication.getApplicationId());
 		return application;
 	}
-
-
-	
 	
 	/**
 	 * 
