@@ -21,7 +21,6 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ntg.adm.base.BaseEntity;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,7 +40,6 @@ public class AdmApplication extends BaseEntity implements Serializable {
 	@Column(name="APPLICATION_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appGenerator")
 	@SequenceGenerator(name = "appGenerator", sequenceName = "APPLICATION_SEQ", allocationSize = 1)
-	@ApiModelProperty(notes = "The database generated aplication ID")
 	private long applicationId;
 	
 	@Column(name="APPLICATION_NAME")
