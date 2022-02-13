@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ntg.adm.annotation.Audit;
 import com.ntg.adm.dto.ApplicationDTO;
 import com.ntg.adm.dto.mapper.ApplicationMapper;
 import com.ntg.adm.exception.RecordNotFoundException;
@@ -60,6 +61,7 @@ public class ApplicationController {
 	}
 	
 	@RequestMapping(value = "/criteria", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Audit
 	public ResponseEntity<SuccessResponse<Page<ApplicationDTO>>> findAllApplicationsCriteria(@RequestBody SearchQuery searchQuery) {
 		Page<ApplicationDTO> result = applicationService.findApplicationsByCriteria(searchQuery);		
 		return new ResponseEntity<>(new SuccessResponse<>(result), HttpStatus.OK);

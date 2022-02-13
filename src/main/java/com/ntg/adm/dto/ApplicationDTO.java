@@ -7,9 +7,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.ntg.adm.annotation.Unique;
 import com.ntg.adm.service.ApplicationService;
 import com.ntg.adm.service.UserService;
-import com.ntg.adm.validation.annotation.Unique;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

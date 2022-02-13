@@ -6,8 +6,8 @@ import javax.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import com.ntg.adm.annotation.Unique;
 import com.ntg.adm.base.FieldValueExists;
-import com.ntg.adm.validation.annotation.Unique;
 
 public class UniqueValidator implements ConstraintValidator<Unique, Object>{
 	@Autowired

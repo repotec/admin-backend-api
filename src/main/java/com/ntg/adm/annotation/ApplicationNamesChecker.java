@@ -1,4 +1,4 @@
-package com.ntg.adm.validation.annotation;
+package com.ntg.adm.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

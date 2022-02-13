@@ -3,7 +3,8 @@ package com.ntg.adm.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import org.apache.commons.beanutils.BeanUtils;
-import com.ntg.adm.validation.annotation.ApplicationNamesChecker;
+
+import com.ntg.adm.annotation.ApplicationNamesChecker;
 
 public class ApplicationNamesValidator implements ConstraintValidator<ApplicationNamesChecker, Object>{
 	

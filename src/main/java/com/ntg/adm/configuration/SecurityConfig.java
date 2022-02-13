@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @EnableWebSecurity
-public class AdmSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	@Qualifier(value = "userDetailsServiceImpl")
 	UserDetailsService userDetailsService;

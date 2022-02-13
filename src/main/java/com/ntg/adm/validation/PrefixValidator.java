@@ -3,7 +3,7 @@ package com.ntg.adm.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import com.ntg.adm.validation.annotation.Prefix;
+import com.ntg.adm.annotation.Prefix;
 
 public class PrefixValidator implements ConstraintValidator<Prefix, String> {
 

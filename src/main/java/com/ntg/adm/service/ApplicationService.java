@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.ntg.adm.annotation.Audit;
 import com.ntg.adm.base.BaseService;
 import com.ntg.adm.base.FieldValueExists;
 import com.ntg.adm.dao.ApplicationRepository;
@@ -32,6 +33,7 @@ import com.ntg.adm.util.query.SpecificationUtil;
 
 @Service	
 @Transactional
+
 public class ApplicationService extends BaseService<AdmApplication, Long> implements FieldValueExists {
 	
 	@Autowired
