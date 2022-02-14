@@ -72,31 +72,31 @@ public class ApplicationController {
 		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findAll()), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{applicationId}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/toto/{applicationId}", method = RequestMethod.GET)
 	public ResponseEntity<SuccessResponse<ApplicationDTO>> getApplicationById(@PathVariable(name="applicationId") long applicationId) {
-		return new ResponseEntity<>(new SuccessResponse<>(applicationMapper.admApplicationToApplicationDto(applicationService.findById(applicationId).orElseThrow(()-> new RecordNotFoundException("application is not found")))), HttpStatus.OK);
+		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findApplicationById(applicationId)), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/search", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SuccessResponse<List<ApplicationDTO>>> findByApplicationName(@RequestParam(name="name") String applicationName,
-																					   @RequestParam(name="image") String applicationImage) {
-		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findByApplicationName(applicationName, applicationImage).stream().map(applicationMapper::admApplicationToApplicationDto).collect(Collectors.toList())), HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/search/pageable", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SuccessResponse<Page<ApplicationDTO>>> findByApplicationNamePageable(@RequestParam(name="name") String applicationName,
-																							   @RequestParam(name= "id") long applicationId,
-																							   @PageableDefault(page = 0, size = 2)
-																								   @SortDefault.SortDefaults({
-																										   @SortDefault(sort = "applicationName", direction = Sort.Direction.DESC),
-																										   @SortDefault(sort = "applicationId", direction = Sort.Direction.ASC)
-																								   }) Pageable pageable) {
-
-		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findByApplicationCriteria(applicationName,
-																											applicationId,
-																											pageable).
-				map(applicationMapper::admApplicationToApplicationDto)), HttpStatus.OK);
-	}
+//	@RequestMapping(value = "/search", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<SuccessResponse<List<ApplicationDTO>>> findByApplicationName(@RequestParam(name="name") String applicationName,
+//																					   @RequestParam(name="image") String applicationImage) {
+//		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findByApplicationName(applicationName, applicationImage).stream().map(applicationMapper::admApplicationToApplicationDto).collect(Collectors.toList())), HttpStatus.OK);
+//	}
+//
+//	@RequestMapping(value = "/search/pageable", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<SuccessResponse<Page<ApplicationDTO>>> findByApplicationNamePageable(@RequestParam(name="name") String applicationName,
+//																							   @RequestParam(name= "id") long applicationId,
+//																							   @PageableDefault(page = 0, size = 2)
+//																								   @SortDefault.SortDefaults({
+//																										   @SortDefault(sort = "applicationName", direction = Sort.Direction.DESC),
+//																										   @SortDefault(sort = "applicationId", direction = Sort.Direction.ASC)
+//																								   }) Pageable pageable) {
+//
+//		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findByApplicationCriteria(applicationName,
+//																											applicationId,
+//																											pageable).
+//				map(applicationMapper::admApplicationToApplicationDto)), HttpStatus.OK);
+//	}
 
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -68,11 +69,7 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 		 return applicationDTO;
 	}
 	
-	public List<ApplicationDTO> findAllWithSorting(Sort sort){
-		 List<ApplicationDTO> applicationDTO = admApplicationRepository.findAll(sort).stream().map(applicationMapper::admApplicationToApplicationDto).collect(Collectors.toList());
-		 
-		 return applicationDTO;
-	}
+
 	
 	public Optional<AdmApplication> findById(long applicationId){
 		return admApplicationRepository.findById(applicationId);
@@ -125,11 +122,18 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	 * @param searchQuery
 	 * @return
 	 */
+	@Cacheable(cacheNames = {"applications"})
 	public Page<ApplicationDTO> findApplicationsByCriteria(SearchQuery searchQuery){
 		Specification<AdmApplication> specification = SpecificationUtil.bySearchQuery(searchQuery, AdmApplication.class);
 		PageRequest pageRequest = getPageRequest(searchQuery);
 		
 		return admApplicationRepository.findAll(specification, pageRequest).map(applicationMapper::admApplicationToApplicationDto);
+	}
+	
+	
+	@Cacheable("application")
+	public ApplicationDTO findApplicationById(Long applicationId){
+		return applicationMapper.admApplicationToApplicationDto(admApplicationRepository.findByApplicationId(applicationId));
 	}
 	
 	/**

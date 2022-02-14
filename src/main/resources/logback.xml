@@ -40,9 +40,9 @@
 	  
 	 <!-- levels configuration -->
 	 <springProfile name="dev">
-	 <root level="info">
-		<appender-ref ref="STDOUT" />
-	</root>
+	 	<root level="debug">
+			<appender-ref ref="STDOUT" />
+		</root>
 	</springProfile>
 	
 	<springProfile name="test">
@@ -57,12 +57,17 @@
     	</root>
   	</springProfile>
   
+  	<logger name="org.springframework.cache" level="trace">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    
   	<!-- others -->
-	<!--  
-	<logger name="org.springframework.transaction" level="debug"/>
-	<logger name="org.springframework.orm.jpa" level="debug"/>
-
+	 
+	<logger name="org.springframework" level="info"/>
 	
+
+	<!-- 
+	<logger name="org.springframework.orm.jpa" level="debug"/>
 	<logger name="mypackagename.myappname" level="DEBUG"/>
     <logger name="org.hibernate.SQL" level="DEBUG" />
     <logger name="org.hibernate.type" level="DEBUG" />

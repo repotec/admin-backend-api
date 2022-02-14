@@ -25,7 +25,8 @@ public interface ApplicationRepository extends BaseRepository<AdmApplication, Lo
 	Page<AdmApplication> findAll(Pageable pageable);
 	List<AdmApplication> findByApplicationNameIgnoreCaseContaining(String applicationName);
 	List<AdmApplication> findAll();
-
+	AdmApplication findByApplicationId(long applicationId);
+	
 	@EntityGraph(type = EntityGraphType.FETCH, attributePaths = {"admApplicationText"})
 	List<AdmApplication> findAll(Sort sort);
 	

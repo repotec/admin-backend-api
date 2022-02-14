@@ -1,7 +1,5 @@
 package com.ntg.adm.configuration;
 
-
-
 import java.util.Arrays;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -11,7 +9,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 
 @Aspect
