@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,7 @@ public class ApplicationController {
 	
 	@RequestMapping(value = "/pages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<ApplicationDTO>> findAllApplicationsPages(@PageableDefault(page = 0, size = 2)
-																	@SortDefault.SortDefaults({
+																		 @SortDefault.SortDefaults({
 																							@SortDefault(sort = "applicationName", direction = Sort.Direction.DESC),
 																							@SortDefault(sort = "applicationId", direction = Sort.Direction.ASC)
 																							}) Pageable pageable) {
@@ -60,11 +61,16 @@ public class ApplicationController {
 		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findAll(sort)), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/criteria", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	@Audit
-	public ResponseEntity<SuccessResponse<Page<ApplicationDTO>>> findAllApplicationsCriteria(@RequestBody SearchQuery searchQuery) {
+	@RequestMapping(value = "/criteria/dynamic", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<SuccessResponse<Page<ApplicationDTO>>> findAllApplicationsDynamicCriteria(@RequestBody SearchQuery searchQuery) {
 		Page<ApplicationDTO> result = applicationService.findApplicationsByCriteria(searchQuery);		
 		return new ResponseEntity<>(new SuccessResponse<>(result), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/criteria", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<SuccessResponse<Page<ApplicationDTO>>> findByApplicationsByRegularCriteria(@RequestBody ApplicationDTO applicationDTO, Pageable pageable){
+		Page<ApplicationDTO> apps = applicationService.findByApplicationsByRegularCriteria(applicationDTO.getApplicationId(), applicationDTO.getApplicationName(), applicationDTO.getApplicationUrl(), pageable);
+		return new ResponseEntity<>(new SuccessResponse<>(apps), HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,7 +78,7 @@ public class ApplicationController {
 		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findAll()), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/toto/{applicationId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{applicationId}", method = RequestMethod.GET)
 	public ResponseEntity<SuccessResponse<ApplicationDTO>> getApplicationById(@PathVariable(name="applicationId") long applicationId) {
 		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findApplicationById(applicationId)), HttpStatus.OK);
 	}

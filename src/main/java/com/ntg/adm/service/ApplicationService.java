@@ -2,6 +2,7 @@ package com.ntg.adm.service;
 
 import static com.ntg.adm.dao.specification.ApplicationSpecification.idCrtr;
 import static com.ntg.adm.dao.specification.ApplicationSpecification.nameLikeCrtr;
+import static com.ntg.adm.dao.specification.ApplicationSpecification.applicationFullCriteria;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,9 +69,7 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 		 
 		 return applicationDTO;
 	}
-	
 
-	
 	public Optional<AdmApplication> findById(long applicationId){
 		return admApplicationRepository.findById(applicationId);
 	}
@@ -103,18 +102,20 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 		application.setApplicationId(admApplication.getApplicationId());
 		return application;
 	}
-	
-	public List<AdmApplication> findByApplicationName(String applicationName, String image){
-		return admApplicationRepository.findByNameByJPQLQuery(applicationName, image);
-	}
 
-	public Page<AdmApplication> findByApplicationNamePageable(String applicationName, String image, Pageable pageable){
-		return admApplicationRepository.findByNameByJPQLQueryPageable(applicationName, image, pageable);
-	}
+	/**
+	 *
+	 * @param applicationId
+	 * @param applicationName
+	 * @param applicationUrl
+	 * @param pageable
+	 * @return
+	 */
+	@Cacheable(cacheNames = {"applications"}, key = "{#applicationId, #applicationName, #applicationUrl}")
+	public Page<ApplicationDTO> findByApplicationsByRegularCriteria(long applicationId, String applicationName, String applicationUrl ,Pageable pageable){
+		Specification<AdmApplication> specification = Specification.where(applicationFullCriteria(applicationId, applicationName, applicationUrl));
 
-	public Page<AdmApplication> findByApplicationCriteria(String appName, long appId, Pageable pageable){
-		Specification<AdmApplication> spec = Specification.where(nameLikeCrtr(appName)).and(idCrtr(appId));
-		return admApplicationRepository.findAll(spec, pageable);
+		return admApplicationRepository.findAll(specification, pageable).map(applicationMapper::admApplicationToApplicationDto);
 	}
 	
 	/**
@@ -122,7 +123,6 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	 * @param searchQuery
 	 * @return
 	 */
-	@Cacheable(cacheNames = {"applications"})
 	public Page<ApplicationDTO> findApplicationsByCriteria(SearchQuery searchQuery){
 		Specification<AdmApplication> specification = SpecificationUtil.bySearchQuery(searchQuery, AdmApplication.class);
 		PageRequest pageRequest = getPageRequest(searchQuery);
@@ -131,7 +131,7 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	}
 	
 	
-	@Cacheable("application")
+	@Cacheable(cacheNames = {"application"}, key = "{#applicationId}")
 	public ApplicationDTO findApplicationById(Long applicationId){
 		return applicationMapper.admApplicationToApplicationDto(admApplicationRepository.findByApplicationId(applicationId));
 	}

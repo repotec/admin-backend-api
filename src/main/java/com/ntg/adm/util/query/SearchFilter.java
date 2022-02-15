@@ -9,4 +9,10 @@ public class SearchFilter {
 	private String property;
 	private String operator;
 	private Object value;
+
+	public SearchFilter(String property, String operator, Object value) {
+		this.property = property;
+		this.operator = operator;
+		this.value = value;
+	}
 }

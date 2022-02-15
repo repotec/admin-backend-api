@@ -3,6 +3,7 @@ package com.ntg.adm.exception;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.ntg.adm.response.ErrorResponse;
 
 @ControllerAdvice
+@Slf4j
 public class AdminExceptionHandler extends ResponseEntityExceptionHandler {
 	//@Autowired
 	//private JdbcTemplate jdbcTemplate;
@@ -94,7 +96,7 @@ public class AdminExceptionHandler extends ResponseEntityExceptionHandler {
 														"Internal Server Error",
 														request.getDescription(false),
 														errors);
-		
+		ex.printStackTrace();
 		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR); 
 	}
 
@@ -104,21 +106,21 @@ public class AdminExceptionHandler extends ResponseEntityExceptionHandler {
 		List<String> errors = new ArrayList<String>();
 		List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
 		List<ObjectError> globalErrors = ex.getBindingResult().getGlobalErrors();
-		
-		
-		for(FieldError fieldError : fieldErrors) 
+
+
+		for(FieldError fieldError : fieldErrors)
 			errors.add(fieldError.getDefaultMessage());
-		
-		for(ObjectError globalError : globalErrors) 
+
+		for(ObjectError globalError : globalErrors)
 			errors.add(globalError.getDefaultMessage());
-		
+
 		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
-														"9999",
+														"9998",
 														"Internal Server Error",
 														request.getDescription(false),
 														errors);
-		
-		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR); 
+		ex.getStackTrace();
+		return new ResponseEntity<Object>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	

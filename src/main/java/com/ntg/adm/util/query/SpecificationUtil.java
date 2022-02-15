@@ -18,10 +18,10 @@ public class SpecificationUtil {
 		return (Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
 			List<Predicate> predicates = null;
 			
-			List<SearchFilter> searchFilters = searchQuery.getSearchFitler();
+			List<SearchFilter> searchFilters = searchQuery.getSearchFilter();
 			
 			if (searchFilters != null && !searchFilters.isEmpty()) {
-				predicates = new ArrayList<Predicate>();
+				predicates = new ArrayList();
 				for (final SearchFilter searchFilter : searchFilters) {
 					addPredicates(predicates, searchFilter, cb, root);
 				}
@@ -35,16 +35,16 @@ public class SpecificationUtil {
 		};
 	}
 	
-	private static <T> void addPredicates(List<Predicate> predicates, SearchFilter searchFilter, CriteriaBuilder criterailBuilder, Root<T> root) {
+	public static <T> void addPredicates(List<Predicate> predicates, SearchFilter searchFilter, CriteriaBuilder criteriaBuilder, Root<T> root) {
 		String property = searchFilter.getProperty();
 		
 		if(!(property == null || property.isEmpty() || property.isBlank())) {
 			Path expression = root.get(property);
-			addPredicate(predicates, searchFilter, criterailBuilder, expression);
+			addPredicate(predicates, searchFilter, criteriaBuilder, expression);
 		}
 	}
-	
-	private static void addPredicate(List<Predicate> predicates, SearchFilter searchFilter, CriteriaBuilder cb, Path expression) {
+
+	public static void addPredicate(List<Predicate> predicates, SearchFilter searchFilter, CriteriaBuilder cb, Path expression) {
 		switch (searchFilter.getOperator()) {
 		case "=":
 			predicates.add(cb.equal(expression, searchFilter.getValue()));

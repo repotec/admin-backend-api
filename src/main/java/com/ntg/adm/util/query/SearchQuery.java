@@ -3,10 +3,10 @@ package com.ntg.adm.util.query;
 import java.util.List;
 
 public class SearchQuery {
-	private List<SearchFilter> searchFitler;
+	private List<SearchFilter> searchFilter;
 	private SortOrder sortOrder;
-	Integer pageNumber;
-	Integer pageSize;
+	private Integer pageNumber;
+	private Integer pageSize;
 	
 	public Integer getPageNumber() {
 		return pageNumber;
@@ -24,12 +24,12 @@ public class SearchQuery {
 		this.pageSize = pageSize;
 	}
 
-	public List<SearchFilter> getSearchFitler() {
-		return searchFitler;
+	public List<SearchFilter> getSearchFilter() {
+		return searchFilter;
 	}
 
-	public void setSearchFitler(List<SearchFilter> searchFitler) {
-		this.searchFitler = searchFitler;
+	public void setSearchFilter(List<SearchFilter> searchFitler) {
+		this.searchFilter = searchFitler;
 	}
 	
 	public SortOrder getSortOrder() {
