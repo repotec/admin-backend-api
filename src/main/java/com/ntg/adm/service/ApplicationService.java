@@ -1,17 +1,17 @@
 package com.ntg.adm.service;
 
-import static com.ntg.adm.dao.specification.ApplicationSpecification.idCrtr;
-import static com.ntg.adm.dao.specification.ApplicationSpecification.nameLikeCrtr;
 import static com.ntg.adm.dao.specification.ApplicationSpecification.applicationFullCriteria;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +21,6 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.ntg.adm.annotation.Audit;
 import com.ntg.adm.base.BaseService;
 import com.ntg.adm.base.FieldValueExists;
 import com.ntg.adm.dao.ApplicationRepository;
@@ -35,19 +34,28 @@ import com.ntg.adm.util.query.SpecificationUtil;
 
 @Service	
 @Transactional
-
+@Slf4j
 public class ApplicationService extends BaseService<AdmApplication, Long> implements FieldValueExists {
-	
 	@Autowired
-	ApplicationRepository admApplicationRepository;
+	ApplicationRepository repository;
 
 	@Autowired
-	ApplicationMapper applicationMapper;
-	
+	ApplicationMapper mapper;
+
+	/**
+	 *
+	 * @param pageable
+	 * @return
+	 */
 	public Page<AdmApplication> findAll(Pageable pageable){
-		return admApplicationRepository.findAll(pageable);
+		return repository.findAll(pageable);
 	}
-	
+
+	/**
+	 *
+	 * @param sort
+	 * @return
+	 */
 	public List<ApplicationDTO> findAll(String[] sort){
 		
 		List<Order> orders = new ArrayList<Order>();
@@ -59,21 +67,21 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 		    }
 		}
 		
-		List<ApplicationDTO> applicationDtoList = admApplicationRepository.findAll(Sort.by(orders)).stream().map(applicationMapper::admApplicationToApplicationDto).collect(Collectors.toList());
+		List<ApplicationDTO> applicationDtoList = repository.findAll(Sort.by(orders)).stream().map(mapper::entityToDto).collect(Collectors.toList());
 		
 		return applicationDtoList;
 	}
-	
+
+	/**
+	 *
+	 * @return
+	 */
 	public List<ApplicationDTO> findAll(){
-		 List<ApplicationDTO> applicationDTO = admApplicationRepository.findAll().stream().map(applicationMapper::admApplicationToApplicationDto).collect(Collectors.toList());
+		 List<ApplicationDTO> applicationDTO = repository.findAll().stream().map(mapper::entityToDto).collect(Collectors.toList());
 		 
 		 return applicationDTO;
 	}
 
-	public Optional<AdmApplication> findById(long applicationId){
-		return admApplicationRepository.findById(applicationId);
-	}
-	
 	/**
 	 * 
 	 * @param application
@@ -81,24 +89,7 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	 * @return
 	 */
 	public ApplicationDTO createApplication(ApplicationDTO application, long applicationId){
-		AdmApplication admApplication = admApplicationRepository.save(applicationMapper.ApplicationDtoToAdmApplication(application));
-		application.setApplicationId(admApplication.getApplicationId());
-		return application;
-	}
-	
-	/**
-	 * 
-	 * @param application
-	 * @param applicationId
-	 * @return
-	 */
-	public ApplicationDTO updateApplication(ApplicationDTO application, long applicationId) {
-		if (!admApplicationRepository.findById(applicationId).isPresent()) {
-			throw new RecordNotFoundException(ResourceBundleUtil.getMessage("email.validation.error"));
-		}
-		
-		application.setApplicationId(applicationId);
-		AdmApplication admApplication = admApplicationRepository.save(applicationMapper.ApplicationDtoToAdmApplication(application));
+		AdmApplication admApplication = repository.save(mapper.dtoToEntity(application));
 		application.setApplicationId(admApplication.getApplicationId());
 		return application;
 	}
@@ -115,7 +106,7 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	public Page<ApplicationDTO> findByApplicationsByRegularCriteria(long applicationId, String applicationName, String applicationUrl ,Pageable pageable){
 		Specification<AdmApplication> specification = Specification.where(applicationFullCriteria(applicationId, applicationName, applicationUrl));
 
-		return admApplicationRepository.findAll(specification, pageable).map(applicationMapper::admApplicationToApplicationDto);
+		return repository.findAll(specification, pageable).map(mapper::entityToDto);
 	}
 	
 	/**
@@ -123,19 +114,51 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	 * @param searchQuery
 	 * @return
 	 */
+	@Cacheable(cacheNames = {"applications2"}, key = "{#root.methodName}")
 	public Page<ApplicationDTO> findApplicationsByCriteria(SearchQuery searchQuery){
 		Specification<AdmApplication> specification = SpecificationUtil.bySearchQuery(searchQuery, AdmApplication.class);
 		PageRequest pageRequest = getPageRequest(searchQuery);
 		
-		return admApplicationRepository.findAll(specification, pageRequest).map(applicationMapper::admApplicationToApplicationDto);
+		return repository.findAll(specification, pageRequest).map(mapper::entityToDto);
 	}
-	
-	
-	@Cacheable(cacheNames = {"application"}, key = "{#applicationId}")
+
+	/**
+	 * Desc: Method created to find the application by applicationId
+	 * @param applicationId
+	 * @return
+	 */
+	@Cacheable(cacheNames = {"applications"}, key = "{#applicationId}")
 	public ApplicationDTO findApplicationById(Long applicationId){
-		return applicationMapper.admApplicationToApplicationDto(admApplicationRepository.findByApplicationId(applicationId));
+		return mapper.entityToDto(repository.findById(applicationId).orElseThrow( ()-> new RecordNotFoundException(ResourceBundleUtil.getMessage("resource.notFound.error"))));
 	}
-	
+
+	/**
+	 * Desc: Method created to delete the application by applicationId
+	 * @param applicationId
+	 */
+	@Override
+	@CacheEvict(cacheNames =  {"applications", "findApplicationsByCriteria"}, key = "{#applicationId}", allEntries = true)
+	public void deleteEntityById(Long applicationId) {
+		super.deleteEntityById(applicationId);
+	}
+
+	/**
+	 *
+	 * @param application
+	 * @return
+	 */
+	@CachePut(cacheNames =  {"applications", "findApplicationsByCriteria"}, key = "{#applicationId}")
+	public ApplicationDTO updateApplication(ApplicationDTO application) {
+		if (!repository.findById(application.getApplicationId()).isPresent()) {
+			throw new RecordNotFoundException(ResourceBundleUtil.getMessage("resource.notFound.error"));
+		}
+
+		application.setApplicationId(application.getApplicationId());
+		AdmApplication admApplication = repository.save(mapper.dtoToEntity(application));
+		application.setApplicationId(admApplication.getApplicationId());
+		return application;
+	}
+
 	/**
 	 * 
 	 */
@@ -145,7 +168,7 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
         if (value == null) 
             return false;
 
-        return this.admApplicationRepository.existsByApplicationName(value.toString());
+        return this.repository.existsByApplicationName(value.toString());
     }
 }
 	

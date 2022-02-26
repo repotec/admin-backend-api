@@ -15,7 +15,7 @@ public interface ApplicationMapper {
     @Mapping(target = "image", source = "image")
     @Mapping(target = "isActive", source = "isActive")
     @Mapping(target = "applicationText", source = "admApplication.admApplicationText")
-	ApplicationDTO admApplicationToApplicationDto(AdmApplication admApplication);
+	ApplicationDTO entityToDto(AdmApplication admApplication);
     
     @Mapping(target = "applicationId", source = "applicationId")
     @Mapping(target = "applicationName", source = "applicationName")
@@ -23,5 +23,5 @@ public interface ApplicationMapper {
     @Mapping(target = "image", source = "image")
     @Mapping(target = "isActive", source = "isActive")
     @Mapping(target = "admApplicationText", source = "applicationDTO.applicationText")
-    AdmApplication ApplicationDtoToAdmApplication(ApplicationDTO applicationDTO);
+    AdmApplication dtoToEntity(ApplicationDTO applicationDTO);
 }

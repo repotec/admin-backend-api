@@ -45,16 +45,21 @@ public class AspectConfig {
 		MethodSignature signature = (MethodSignature) pjp.getSignature();
 		
 		StringBuilder stringBuilder = new StringBuilder(">> [audit] method name[" + pjp.getSignature().getName() + "]");
-		
-		stringBuilder.append("\tparameter names");
-		Arrays.stream(signature.getParameterNames()).forEach(p -> stringBuilder.append("[").append(p).append("]"));
-		
-		stringBuilder.append("\tparameter types");
-		Arrays.stream(signature.getParameterTypes()).forEach(t -> stringBuilder.append("[").append(t).append("]"));
-		
-		stringBuilder.append("\tparameter values");
-		Arrays.stream(pjp.getArgs()).forEach(o -> stringBuilder.append("[").append(o.toString()).append("]"));
-		
+		if(signature.getParameterNames() != null) {
+			stringBuilder.append("\tparameter names");
+			Arrays.stream(signature.getParameterNames()).forEach(p -> stringBuilder.append("[").append(p).append("]"));
+		}
+
+		if(signature.getParameterTypes() != null) {
+			stringBuilder.append("\tparameter types");
+			Arrays.stream(signature.getParameterTypes()).forEach(t -> stringBuilder.append("[").append(t).append("]"));
+		}
+
+		if(pjp.getArgs() != null) {
+			stringBuilder.append("\tparameter values");
+			Arrays.stream(pjp.getArgs()).forEach(o -> stringBuilder.append("[").append(o.toString()).append("]"));
+		}
+
 		stringBuilder.append("\ttook [" + (System.currentTimeMillis() - begin) + "] milliseconds.");
 		logger.info(stringBuilder.toString());
 		return stringBuilder;

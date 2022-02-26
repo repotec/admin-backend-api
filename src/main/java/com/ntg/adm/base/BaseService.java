@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ntg.adm.model.AdmApplication;
+import com.ntg.adm.util.bundle.ResourceBundleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +28,7 @@ public abstract class BaseService<T extends BaseEntity, ID extends Number> {
 	public void deleteEntityById(ID id) {
 		Optional<T> entity = baseRepository.findById(id);
 		if (!entity.isPresent())
-			throw new RecordNotFoundException("resource is not found");
+			throw new RecordNotFoundException(ResourceBundleUtil.getMessage("resource.notFound.error"));
 		
 		baseRepository.sofDeleteById(id);
 	}

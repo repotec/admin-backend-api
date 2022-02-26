@@ -1,11 +1,9 @@
 package com.ntg.adm.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,10 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ntg.adm.annotation.Audit;
 import com.ntg.adm.dto.ApplicationDTO;
 import com.ntg.adm.dto.mapper.ApplicationMapper;
-import com.ntg.adm.exception.RecordNotFoundException;
 import com.ntg.adm.response.SuccessResponse;
 import com.ntg.adm.service.ApplicationService;
 import com.ntg.adm.util.query.SearchQuery;
@@ -48,7 +44,7 @@ public class ApplicationController {
 																							@SortDefault(sort = "applicationName", direction = Sort.Direction.DESC),
 																							@SortDefault(sort = "applicationId", direction = Sort.Direction.ASC)
 																							}) Pageable pageable) {
-		Page<ApplicationDTO> apps = applicationService.findAll(pageable).map(applicationMapper::admApplicationToApplicationDto);
+		Page<ApplicationDTO> apps = applicationService.findAll(pageable).map(applicationMapper::entityToDto);
 
 		//return new ResponseEntity<>(new SuccessResponse<>(applicationService.findAll().stream().map(applicationMapper::admApplicationToApplicationDto).collect(Collectors.toList())), HttpStatus.OK);
 
@@ -78,10 +74,7 @@ public class ApplicationController {
 		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findAll()), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{applicationId}", method = RequestMethod.GET)
-	public ResponseEntity<SuccessResponse<ApplicationDTO>> getApplicationById(@PathVariable(name="applicationId") long applicationId) {
-		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findApplicationById(applicationId)), HttpStatus.OK);
-	}
+
 
 //	@RequestMapping(value = "/search", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 //	public ResponseEntity<SuccessResponse<List<ApplicationDTO>>> findByApplicationName(@RequestParam(name="name") String applicationName,
@@ -104,6 +97,10 @@ public class ApplicationController {
 //				map(applicationMapper::admApplicationToApplicationDto)), HttpStatus.OK);
 //	}
 
+	@RequestMapping(value = "/{applicationId}", method = RequestMethod.GET)
+	public ResponseEntity<SuccessResponse<ApplicationDTO>> getApplicationById(@PathVariable(name="applicationId") long applicationId) {
+		return new ResponseEntity<>(new SuccessResponse<>(applicationService.findApplicationById(applicationId)), HttpStatus.OK);
+	}
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SuccessResponse<ApplicationDTO>> createApplication(@Valid @RequestBody ApplicationDTO application) {
@@ -111,8 +108,8 @@ public class ApplicationController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SuccessResponse<ApplicationDTO>> updateApplication(@PathVariable(name = "id") long applicationId, @Valid @RequestBody ApplicationDTO application) {
-		return new ResponseEntity<>(new SuccessResponse<>( applicationService.updateApplication(application, applicationId)), HttpStatus.OK);
+	public ResponseEntity<SuccessResponse<ApplicationDTO>> updateApplication(@Valid @RequestBody ApplicationDTO application) {
+		return new ResponseEntity<>(new SuccessResponse<>( applicationService.updateApplication(application)), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

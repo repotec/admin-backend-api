@@ -17,13 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UploadUtil {
 
-	
+
 	/**
-	 * 
+	 *
 	 * @param basePath
 	 * @param file
 	 * @param userId
-	 * @param docType
+	 * @param contentType
 	 * @return
 	 */
 	public static String[] storeFile(String basePath, MultipartFile file, Integer userId, String contentType) {
@@ -56,11 +56,10 @@ public class UploadUtil {
 			throw new RuntimeException("Could not store file " + fileFullName + ". Please try again!", ex);
 		}
 	}
-	
+
 	/**
-	 * 
-	 * @param basePath
-	 * @param fileName
+	 *
+	 * @param fileDirectory
 	 * @return
 	 * @throws Exception
 	 */
@@ -84,8 +83,8 @@ public class UploadUtil {
     }
 
 	/**
-	 * 
-	 * @param basePath
+	 *
+	 * @param path
 	 * @return
 	 */
 	private static Path createBaseDirectoryBath(String path) {

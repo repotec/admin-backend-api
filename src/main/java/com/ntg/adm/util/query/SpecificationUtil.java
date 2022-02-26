@@ -31,7 +31,9 @@ public class SpecificationUtil {
 				return cb.conjunction();
 			}
 			
-			return cb.and(predicates.toArray(new Predicate[0]));
+			//return cb.and(predicates.toArray(new Predicate[0]));
+			//return cb.and(predicates.stream().toArray(Predicate[]::new));
+			return cb.and(predicates.toArray(Predicate[]::new));
 		};
 	}
 	
