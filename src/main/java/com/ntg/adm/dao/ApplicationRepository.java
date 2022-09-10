@@ -1,6 +1,7 @@
 package com.ntg.adm.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ public interface ApplicationRepository extends BaseRepository<AdmApplication, Lo
 	Page<AdmApplication> findAll(Pageable pageable);
 	List<AdmApplication> findByApplicationNameIgnoreCaseContaining(String applicationName);
 	List<AdmApplication> findAll();
-	AdmApplication findByApplicationId(long applicationId);
+	Optional<AdmApplication> findByApplicationId(long applicationId);
 	
 	@EntityGraph(type = EntityGraphType.FETCH, attributePaths = {"admApplicationText"})
 	List<AdmApplication> findAll(Sort sort);

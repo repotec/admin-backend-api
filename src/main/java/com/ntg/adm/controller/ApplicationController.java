@@ -104,7 +104,7 @@ public class ApplicationController {
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SuccessResponse<ApplicationDTO>> createApplication(@Valid @RequestBody ApplicationDTO application) {
-		return new ResponseEntity<>(new SuccessResponse<>(applicationService.createApplication(application, 0)), HttpStatus.CREATED);
+		return new ResponseEntity<>(new SuccessResponse<>(applicationService.saveApplication(application)), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

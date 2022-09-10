@@ -21,6 +21,9 @@ public abstract class BaseService<T extends BaseEntity, ID extends Number> {
 	@Autowired
 	BaseRepository<T, ID> baseRepository;
 	
+	@Autowired
+	ResourceBundleUtil resourceBundleUtil;
+	
 	/**
 	 * 
 	 * @param id
@@ -28,7 +31,7 @@ public abstract class BaseService<T extends BaseEntity, ID extends Number> {
 	public void deleteEntityById(ID id) {
 		Optional<T> entity = baseRepository.findById(id);
 		if (!entity.isPresent())
-			throw new RecordNotFoundException(ResourceBundleUtil.getMessage("resource.notFound.error"));
+			throw new RecordNotFoundException(resourceBundleUtil.getMessage("resource.notFound.error"));
 		
 		baseRepository.sofDeleteById(id);
 	}

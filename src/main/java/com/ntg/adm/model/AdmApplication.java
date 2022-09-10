@@ -21,6 +21,8 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ntg.adm.base.BaseEntity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,6 +34,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Where(clause = "IS_DELETED = '0'")
 public class AdmApplication extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

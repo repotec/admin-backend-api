@@ -41,6 +41,9 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 
 	@Autowired
 	ApplicationMapper mapper;
+	
+	@Autowired
+	ResourceBundleUtil resourceBundleUtil;
 
 	/**
 	 *
@@ -88,12 +91,25 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	 * @param applicationId
 	 * @return
 	 */
-	public ApplicationDTO createApplication(ApplicationDTO application, long applicationId){
+	public ApplicationDTO saveApplication(ApplicationDTO application){
 		AdmApplication admApplication = repository.save(mapper.dtoToEntity(application));
 		application.setApplicationId(admApplication.getApplicationId());
 		return application;
 	}
 
+	/**
+	 * 
+	 * @param application
+	 * @param applicationId
+	 * @return
+	 */
+	public AdmApplication saveApplication(AdmApplication application){
+		AdmApplication admApplication = repository.save(application);
+		application.setApplicationId(admApplication.getApplicationId());
+		return admApplication;
+	}
+
+	
 	/**
 	 *
 	 * @param applicationId
@@ -129,7 +145,7 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	 */
 	@Cacheable(cacheNames = {"applications"}, key = "{#applicationId}")
 	public ApplicationDTO findApplicationById(Long applicationId){
-		return mapper.entityToDto(repository.findById(applicationId).orElseThrow( ()-> new RecordNotFoundException(ResourceBundleUtil.getMessage("resource.notFound.error"))));
+		return mapper.entityToDto(repository.findById(applicationId).orElseThrow( ()-> new RecordNotFoundException(resourceBundleUtil.getMessage("resource.notFound.error"))));
 	}
 
 	/**
@@ -150,7 +166,7 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	@CachePut(cacheNames =  {"applications", "findApplicationsByCriteria"}, key = "{#applicationId}")
 	public ApplicationDTO updateApplication(ApplicationDTO application) {
 		if (!repository.findById(application.getApplicationId()).isPresent()) {
-			throw new RecordNotFoundException(ResourceBundleUtil.getMessage("resource.notFound.error"));
+			throw new RecordNotFoundException(resourceBundleUtil.getMessage("resource.notFound.error"));
 		}
 
 		application.setApplicationId(application.getApplicationId());
