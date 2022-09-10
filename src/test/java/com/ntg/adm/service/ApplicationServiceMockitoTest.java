@@ -36,7 +36,7 @@ import com.ntg.adm.util.bundle.ResourceBundleUtil;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-public class ApplicationServiceMockingTest {
+public class ApplicationServiceMockitoTest {
 
 	@InjectMocks
     private ApplicationService service;
