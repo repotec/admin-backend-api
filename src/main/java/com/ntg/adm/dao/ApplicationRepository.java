@@ -42,4 +42,5 @@ public interface ApplicationRepository extends BaseRepository<AdmApplication, Lo
 	Page<AdmApplication> findAll(Specification<AdmApplication> applicationCriteria, Pageable pageable);
 	
 	boolean existsByApplicationName(String value);
+	
 }

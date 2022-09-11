@@ -145,7 +145,7 @@ public class ApplicationService extends BaseService<AdmApplication, Long> implem
 	 */
 	@Cacheable(cacheNames = {"applications"}, key = "{#applicationId}")
 	public ApplicationDTO findApplicationById(Long applicationId){
-		return mapper.entityToDto(repository.findById(applicationId).orElseThrow( ()-> new RecordNotFoundException(resourceBundleUtil.getMessage("resource.notFound.error"))));
+		return mapper.entityToDto(repository.findByApplicationId(applicationId).orElseThrow( ()-> new RecordNotFoundException(resourceBundleUtil.getMessage("resource.notFound.error"))));
 	}
 
 	/**

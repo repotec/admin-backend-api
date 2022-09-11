@@ -88,7 +88,7 @@
 			<artifactId>lombok-mapstruct-binding</artifactId>
 			<version>${mapstruct-lombok.version}</version>
 		</dependency>
-
+		
 		<!-- for spring test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -106,6 +106,12 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+        </dependency>
 		<!-- for spring test -->
     </dependencies>
 
